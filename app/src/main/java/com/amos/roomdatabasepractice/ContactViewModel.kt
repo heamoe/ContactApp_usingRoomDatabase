@@ -9,6 +9,6 @@ class ContactViewModel(
     private val _sortType = MutableStateFlow(SortType.FIRST_NAME)
     private val state = MutableStateFlow(ContactState())
     fun onEvent(event:ContactEvent){
-
+        //try
     }
 }
