@@ -1,4 +1,5 @@
 package com.amos.roomdatabasepractice
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -70,6 +71,7 @@ fun ContactScreen(
                                     "Phone Number" -> SortType.PHONE_NUMBER
                                     else -> SortType.FIRST_NAME
                                 }
+                                Log.d("ContactScreen", "Selected SortType: $sortType")
                                 onEvent(ContactEvent.SortContacts(sortType))
                                 selectedItem = item
                                 expanded = false
