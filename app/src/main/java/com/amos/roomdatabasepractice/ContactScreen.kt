@@ -22,32 +22,41 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ContactScreen(
     state: ContactState,
-    onEvent: (ContactEvent)->Unit
-){
+    onEvent: (ContactEvent) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     val items = listOf("First Name", "Last Name", "Phone Number")
     var selectedItem by remember { mutableStateOf(items[0]) }
-
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 onEvent(ContactEvent.ShowDialog)
             }) {
-                Icon(imageVector = Icons.Default.Add,contentDescription = null)
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
-        }
+        },
+        modifier = Modifier.padding(16.dp)
     ) {
+        if (state.isAddingContact) {
+            AddContactDialog(state = state, onEvent = onEvent)
+        }
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(it),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = "Sorted By",
-                    modifier = Modifier.padding(it),
-                    color =MaterialTheme.colorScheme.primary
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .clickable { expanded = true },
+                    color = MaterialTheme.colorScheme.primary
                 )
+                Text(text = selectedItem, modifier = Modifier.clickable { expanded = true })
+
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
@@ -55,10 +64,10 @@ fun ContactScreen(
                     items.forEach { item ->
                         DropdownMenuItem(
                             onClick = {
-                                var sortType = when(item){
-                                    "First Name"->SortType.FIRST_NAME
-                                    "Last Name" ->SortType.LAST_NAME
-                                    "Phone Number"->SortType.PHONE_NUMBER
+                                val sortType = when (item) {
+                                    "First Name" -> SortType.FIRST_NAME
+                                    "Last Name" -> SortType.LAST_NAME
+                                    "Phone Number" -> SortType.PHONE_NUMBER
                                     else -> SortType.FIRST_NAME
                                 }
                                 onEvent(ContactEvent.SortContacts(sortType))
@@ -69,25 +78,26 @@ fun ContactScreen(
                         )
                     }
                 }
-                LazyColumn(contentPadding = it,
-                    modifier = Modifier.fillMaxSize(), 
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    ){
-                    items(state.contacts){contact->
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(text ="${contact.firstname} ${contact.lastname}",
-                                    fontSize = 20.sp
-                                )
-                                Text(text = contact.phoneNumber,fontSize = 12.sp)
-                            }
-                            IconButton(onClick = {onEvent(ContactEvent.DeleteContact(contact)) }) {
-                                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                            }
+            }
+            LazyColumn(
+                contentPadding = it,
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                items(state.contacts) { contact ->
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "${contact.firstname} ${contact.lastname}",
+                                fontSize = 20.sp
+                            )
+                            Text(text = contact.phoneNumber, fontSize = 12.sp)
+                        }
+                        IconButton(onClick = { onEvent(ContactEvent.DeleteContact(contact)) }) {
+                            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
                         }
                     }
                 }
-
             }
         }
     }
