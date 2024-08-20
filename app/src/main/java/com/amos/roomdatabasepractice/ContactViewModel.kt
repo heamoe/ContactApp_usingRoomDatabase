@@ -1,5 +1,6 @@
 package com.amos.roomdatabasepractice
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -7,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -15,16 +17,27 @@ import kotlinx.coroutines.launch
 class ContactViewModel(
     private val  dao: ContactDao
 ): ViewModel() {
-    private val _sortType = MutableStateFlow(SortType.FIRST_NAME)
+    private val _sortType = MutableStateFlow(SortType.PHONE_NUMBER)
     private val _contact = _sortType
-        .flatMapConcat { sortType->
-            when(sortType){
-                SortType.FIRST_NAME -> dao.getContactsOrderedByFirstName()
-                SortType.LAST_NAME -> dao.getContactsOrderedByLastName()
-                SortType.PHONE_NUMBER -> dao.getContactsOrderedByPhoneNumber()
+        .flatMapLatest { sortType ->
+            when (sortType) {
+                SortType.FIRST_NAME -> {
+                    Log.d("ContactViewModel", "Fetching contacts by first name")
+                    dao.getContactsOrderedByFirstName()
+                }
+                SortType.LAST_NAME -> {
+                    Log.d("ContactViewModel", "Fetching contacts by last name")
+                    dao.getContactsOrderedByLastName()
+                }
+                SortType.PHONE_NUMBER -> {
+                    Log.d("ContactViewModel", "Fetching contacts by phone number")
+                    dao.getContactsOrderedByPhoneNumber()
+                }
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+
     private val _state = MutableStateFlow(ContactState())
     val state = combine(_state,_sortType,_contact){ state,sortType,contacts ->
         state.copy(
@@ -84,6 +97,7 @@ class ContactViewModel(
                 ) }
             }
             is ContactEvent.SortContacts -> {
+                Log.d("ContactViewModel", "Updating sort type to: ${event.sortType}")
                 _sortType.value = event.sortType
             }
         }

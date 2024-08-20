@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun ContactScreen(
     state: ContactState,
@@ -56,21 +55,21 @@ fun ContactScreen(
                         .clickable { expanded = true },
                     color = MaterialTheme.colorScheme.primary
                 )
-                Text(text = selectedItem, modifier = Modifier.clickable { expanded = true })
+                Text(text = selectedItem, modifier = Modifier.clickable { expanded = true})
 
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
                 ) {
                     items.forEach { item ->
+                        val sortType = when (item) {
+                            "First Name" -> SortType.FIRST_NAME
+                            "Last Name" -> SortType.LAST_NAME
+                            "Phone Number" -> SortType.PHONE_NUMBER
+                            else -> SortType.FIRST_NAME
+                        }
                         DropdownMenuItem(
                             onClick = {
-                                val sortType = when (item) {
-                                    "First Name" -> SortType.FIRST_NAME
-                                    "Last Name" -> SortType.LAST_NAME
-                                    "Phone Number" -> SortType.PHONE_NUMBER
-                                    else -> SortType.FIRST_NAME
-                                }
                                 Log.d("ContactScreen", "Selected SortType: $sortType")
                                 onEvent(ContactEvent.SortContacts(sortType))
                                 selectedItem = item
