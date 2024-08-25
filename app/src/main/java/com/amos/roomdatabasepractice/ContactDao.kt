@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface ContactDao {
     @Upsert
     suspend fun upsertContact(contact: Contact)
+
     @Delete
     suspend fun deleteContact(contact: Contact)
 

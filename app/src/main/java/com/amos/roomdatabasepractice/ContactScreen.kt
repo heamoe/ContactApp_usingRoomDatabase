@@ -1,4 +1,5 @@
 package com.amos.roomdatabasepractice
+
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -55,7 +56,7 @@ fun ContactScreen(
                         .clickable { expanded = true },
                     color = MaterialTheme.colorScheme.primary
                 )
-                Text(text = selectedItem, modifier = Modifier.clickable { expanded = true})
+                Text(text = selectedItem, modifier = Modifier.clickable { expanded = true })
 
                 DropdownMenu(
                     expanded = expanded,

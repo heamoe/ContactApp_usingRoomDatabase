@@ -18,7 +18,7 @@ fun AddContactDialog(
     modifier: Modifier = Modifier
 ) {
     AlertDialog(
-        onDismissRequest = {onEvent(ContactEvent.HideDialog)},
+        onDismissRequest = { onEvent(ContactEvent.HideDialog) },
         title = { Text(text = "Add Contact") },
         text = {
             Column(

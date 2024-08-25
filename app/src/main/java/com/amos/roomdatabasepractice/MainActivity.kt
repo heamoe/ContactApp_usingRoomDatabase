@@ -28,9 +28,9 @@ class MainActivity : ComponentActivity() {
     }
     private val viewModel by viewModels<ContactViewModel>(
         factoryProducer = {
-            object:ViewModelProvider.Factory{
-                override fun <T:ViewModel> create(modelClass: Class<T>):T{
-                    return ContactViewModel(db.dao)as T
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return ContactViewModel(db.dao) as T
                 }
             }
         }
